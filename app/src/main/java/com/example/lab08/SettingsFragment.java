@@ -20,12 +20,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -34,8 +39,16 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,14 +58,18 @@ import java.util.Objects;
 public class SettingsFragment extends Fragment {
 
 
-
     private TextView tv_date;
     private Button btn_date;
     private Button btn_loadimage;
+
+    private ListView listView;
     private DatePickerDialog.OnDateSetListener dateSetListener;
 
     private ImageView ivShowImage;
 
+    private ProgressBar progressBar;
+
+    public String userDate;
 
 
 
@@ -67,6 +84,9 @@ public class SettingsFragment extends Fragment {
 
     public SettingsFragment() {
         // Required empty public constructor
+
+
+
     }
 
     /**
@@ -98,7 +118,15 @@ public class SettingsFragment extends Fragment {
         btn_date = root.findViewById(R.id.btn_date);
         btn_loadimage = root.findViewById(R.id.button2);
         tv_date = root.findViewById(R.id.tv_date);
-        ivShowImage = root.findViewById(R.id.imageView);
+        //ivShowImage = root.findViewById(R.id.imageView);
+        listView = root.findViewById(R.id.listViewH);
+        //progressBar=(ProgressBar)root.findViewById(R.id.progressBar);
+
+
+
+
+
+
 
         btn_date.setOnClickListener(new View.OnClickListener() {
 
@@ -119,18 +147,19 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-dateSetListener = new DatePickerDialog.OnDateSetListener() {
-    @Override
-    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
 
-        month = month +1;
-        Log.d(TAG, "onDateSet: dd/mm/yyyy): " + day + "/" + month + "/" + year);
+                month = month +1;
+                Log.d(TAG, "onDateSet: dd/mm/yyyy): " + day + "/" + month + "/" + year);
 
-        String date = day + "/" + month + "/" + year;
-        tv_date.setText(date);
+                String date = day + "/" + month + "/" + year;
+                userDate = date;
+                tv_date.setText(date);
 
-    }
-};
+            }
+        };
 
 
         // start of LOAD IMAGE button
@@ -141,67 +170,103 @@ dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onClick(View view) {
 
-                //Toast.makeText(getActivity(), "Image button test", Toast.LENGTH_SHORT).show();
 
-                new ImageDownloader().execute("https://www.nasa.gov/wp-content/uploads/2023/09/53210646183_c08c1305c8_o.jpg");
-            }
+                //Toast.makeText(getActivity(), "Fetching Nasa image download", Toast.LENGTH_SHORT).show();
+                //String API_KEY = "apod?api_key=jeADHwHp60mEX1frcE913FAnV5c2FyGrA3Hmcd95";
 
-            class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
 
-                HttpURLConnection httpURLConnection;
 
-                @Override
-                protected Bitmap doInBackground(String... strings) {
 
-                    try {
-                        URL url = new URL(strings[0]);
-                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                        InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
-                        Bitmap temp = BitmapFactory.decodeStream(inputStream);
-                        return temp;
+                getNasaImages();
 
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        //httpURLConnection.disconnect();
-                    }
 
-                    return null;
-                }
 
-                @Override
-                protected void onPostExecute(Bitmap bitmap) {
-                    if(bitmap != null) {
-                        ivShowImage.setImageBitmap(bitmap);
-                        Toast.makeText(getActivity(), "Image download successful", Toast.LENGTH_SHORT).show();
-                     } else {
-                        Toast.makeText(getActivity(), "Image download ERROR", Toast.LENGTH_SHORT).show();
 
-                    }
-                }
-
-                @Override
-                protected void onProgressUpdate(Void... values) {
-                    super.onProgressUpdate(values);
-                }
             }
 
 
 
-        }); //end of LOAD IMAGE button
+
+                });
+
+
+return root;
+
+
+
+
+    } //end button call
+
+
+
+
+    public void getNasaImages() {
+
+        Toast.makeText(getActivity(), "Callng getNasaImages Method", Toast.LENGTH_SHORT).show();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Api.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+
+
+
+        Call<List<GetSetApi>> call = RetrofitClient.getInstance().getMyApi().getNasaImages();
+        call.enqueue(new Callback<List<GetSetApi>>() {
+            @Override
+
+
+
+
+            public void onResponse(@NonNull Call<List<GetSetApi>> call, @NonNull Response<List<GetSetApi>> response) {
+
+                List<GetSetApi> nasaList = response.body();
+
+
+
+                //Create string array for the ListView
+                String[] nasaimages = new String[nasaList.size()];
+
+                //looping through all the JSON data and inserting the dates inside the string array
+                for (int i = 0; i < nasaList.size(); i++) {
+                    nasaimages[i] = nasaList.get(i).getDate();
+
+                }
+
+                //displaying the string array into listview
+                listView.setAdapter(
+                        new ArrayAdapter<String>(
+                                getContext(),
+                                android.R.layout.simple_list_item_1,
+                                nasaimages)
+                );
+
+
+
+            }
 
 
 
 
 
-        return root;
+
+
+
+            @Override
+            public void onFailure(Call<List<GetSetApi>> call, Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
 
     }
 
 
 
 
-
 }
+

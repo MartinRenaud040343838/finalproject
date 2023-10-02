@@ -29,7 +29,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="77dp"
         android:text="--/--/--"
-        android:textSize="30dp" />
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/btn_date"
@@ -51,14 +51,13 @@
         android:layout_marginEnd="52dp"
         android:text="Load image" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="322dp"
-        android:layout_height="434dp"
+    <ListView
+        android:id="@+id/listViewH"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="199dp"
-        android:src="@android:drawable/ic_menu_gallery" />
+        android:layout_marginTop="244dp" />
 
 
 </RelativeLayout>
