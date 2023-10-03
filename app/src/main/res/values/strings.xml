@@ -5,4 +5,29 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">blank frag</string>
 
+    <string name="homemenu">Home</string>
+
+    <string name="welcomemsg">Final Project! NASA Image of the day</string>
+
+    <string name="iotd">NASA image of the day!</string>
+
+    <string name="cdh">Choose date here!</string>
+
+    <string name="helpmenu">Welcome to the help menu</string>
+
+    <string name="pickimage">Pick a NASA image of the day!</string>
+
+    <string name="helpmenunav">Help menu</string>
+
+    <string name="exit">Exit</string>
+
+    <string name="steps">1. Click on the 3 lines at the top right corner of the app\n\n2. Select a date\n\n3. Click on [ Load Image] and select the picture to open</string>
+
+
+    <string name="preference_file_key" />
+    <string name="saved_high_score_key" />
+
+
+
+
 </resources>

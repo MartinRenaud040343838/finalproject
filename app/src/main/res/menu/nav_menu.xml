@@ -9,26 +9,26 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/nav_home"
-            android:title="Home"/>
+            android:title="@string/homemenu"/>
 
 
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_item5"
-            android:title="Pick a NASA image of the day!"/>
+            android:title="@string/pickimage"/>
 
 
 
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_item5"
-            android:title="Help menu"/>
+            android:title="@string/helpmenunav"/>
 
 
         <item
             android:id="@+id/nav_share"
             android:icon="@drawable/ic_exiticon"
-            android:title="Exit"/>
+            android:title="@string/exit"/>
 
 
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NASA - Recherche d\'images!</string>
+    <string name="welcomemsg">Projet final! NASA Image du jour</string>
+    <string name="iotd">Image NASA du jour!</string>
+    <string name="cdh">Choisissez une date ici!</string>
+    <string name="helpmenu">Bienvenue dans le menu d\'aide</string>
+    <string name="pickimage">Choisissez une image NASA du jour !</string>
+    <string name="helpmenunav">Menu d\'aide</string>
+    <string name="exit">Quitter</string>
+    <string name="steps">1. Cliquez sur les 3 lignes dans le coin supérieur droit de l\'application\\n\\n2. Sélectionnez une date\\n\\n3. Cliquez sur [ Charger l\'image] et sélectionnez l\'image à ouvrir</string>
+    <string name="homemenu">Accueil</string>
+</resources>

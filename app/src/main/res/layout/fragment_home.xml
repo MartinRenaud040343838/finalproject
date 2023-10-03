@@ -13,7 +13,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="53dp"
         android:gravity="center"
-        android:text="Final Project!\n NASA image of the day"
+        android:text="@string/welcomemsg"
         android:textSize="30sp" />
 
 

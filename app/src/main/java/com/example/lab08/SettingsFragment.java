@@ -1,10 +1,12 @@
 package com.example.lab08;
 
+import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -29,6 +31,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -56,6 +60,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * create an instance of this fragment.
  */
 public class SettingsFragment extends Fragment {
+
+
+    private UserSettings settings;
+
+
+    Context context = getActivity();
+
 
 
     private TextView tv_date;
@@ -112,6 +123,8 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+
         View root = inflater.inflate(R.layout.fragment_settings, container, false);
 
 
@@ -121,8 +134,6 @@ public class SettingsFragment extends Fragment {
         //ivShowImage = root.findViewById(R.id.imageView);
         listView = root.findViewById(R.id.listViewH);
         //progressBar=(ProgressBar)root.findViewById(R.id.progressBar);
-
-
 
 
 
@@ -178,6 +189,7 @@ public class SettingsFragment extends Fragment {
 
 
                 getNasaImages();
+                saveData();
 
 
 
@@ -197,7 +209,28 @@ return root;
 
     } //end button call
 
+    private void saveData() {
 
+
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        int newHighScore = 0;
+        editor.putInt(getString(R.string.saved_high_score_key), newHighScore);
+        editor.apply();
+
+
+    }
+
+
+    private void loadData() {
+
+
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        int defaultValue = getResources().getInteger(R.integer.saved_high_score_default_key);
+        int highScore = sharedPref.getInt(getString(R.string.saved_high_score_key), defaultValue);
+
+
+    }
 
 
     public void getNasaImages() {
@@ -209,10 +242,12 @@ return root;
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+        Api api = retrofit.create(Api.class);
 
 
+        Call<List<GetSetApi>> call = api.getNasaImages();
 
-        Call<List<GetSetApi>> call = RetrofitClient.getInstance().getMyApi().getNasaImages();
+
         call.enqueue(new Callback<List<GetSetApi>>() {
             @Override
 
@@ -229,7 +264,7 @@ return root;
                 String[] nasaimages = new String[nasaList.size()];
 
                 //looping through all the JSON data and inserting the dates inside the string array
-                for (int i = 0; i < nasaList.size(); i++) {
+                for(int i = 0; i < nasaList.size(); i++) {
                     nasaimages[i] = nasaList.get(i).getDate();
 
                 }
@@ -262,6 +297,12 @@ return root;
 
 
 
+
+    }
+
+
+    private void loadSharedPreferences()
+    {
 
     }
 
